@@ -14,6 +14,29 @@ class _BooksSeparatedPageState extends State<BooksSeparatedPage> {
     {'id': 3, 'title': 'Собачье сердце', 'author': 'М. Булгаков', 'pages': 110},
   ];
 
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _authorController = TextEditingController();
+
+  int _nextId = 4;
+
+  void _addBook() {
+    final title = _titleController.text.trim();
+    final author = _authorController.text.trim();
+
+    if (title.isEmpty || author.isEmpty) return;
+
+    setState(() {
+      _books.add({
+        'id': _nextId++,
+        'title': title,
+        'author': author,
+        'pages': 0,
+      });
+      _titleController.clear();
+      _authorController.clear();
+    });
+  }
+
   void _removeBook(int id) {
     setState(() => _books.removeWhere((book) => book['id'] == id));
   }
@@ -38,6 +61,7 @@ class _BooksSeparatedPageState extends State<BooksSeparatedPage> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
+
           Expanded(
             child: ListView.separated(
               itemCount: _books.length,
@@ -69,6 +93,22 @@ class _BooksSeparatedPageState extends State<BooksSeparatedPage> {
                 );
               },
             ),
+          ),
+
+          const Divider(height: 24, thickness: 1),
+
+          TextField(
+            controller: _titleController,
+            decoration: const InputDecoration(labelText: 'Название книги'),
+          ),
+          TextField(
+            controller: _authorController,
+            decoration: const InputDecoration(labelText: 'Автор'),
+          ),
+          const SizedBox(height: 12),
+          ElevatedButton(
+            onPressed: _addBook,
+            child: const Text('Добавить книгу'),
           ),
         ],
       ),
